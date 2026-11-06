@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Log in · Spendwise{% endblock %}
+{% block content %}
+<section class="card"><h1>Welcome back</h1><p class="muted">Track income, expenses and budgets in one place.</p>
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Username<input name="username" required autocomplete="username" value="{{ request.form.username or '' }}"></label>
+    <label>Password<input name="password" type="password" required autocomplete="current-password"></label>
+    <button class="btn primary">Log in</button>
+  </form>
+  <p class="muted">No account? <a href="{{ url_for('auth.register') }}">Sign up</a> · Demo: demo / demo123</p></section>
+{% endblock %}
