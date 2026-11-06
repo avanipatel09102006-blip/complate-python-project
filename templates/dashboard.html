@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf" content="{{ csrf_token() }}">
+  <title>Dashboard · Spendwise</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <div class="brand"><span class="logo">S</span>Spendwise</div>
+  <div class="bar-actions">
+    <input type="month" id="month" aria-label="Month">
+    <button id="addBtn" class="btn primary">Add transaction</button>
+    <a id="exportLink" class="btn ghost" href="#">Export CSV</a>
+    <span class="who">{{ g.user.username }}</span>
+    <form method="post" action="{{ url_for('auth.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn ghost">Log out</button></form>
+  </div>
+</div></header>
+
+<main class="wrap">
+  <section class="stats" id="stats"></section>
+  <div class="two">
+    <section class="card"><h2>Spending by category</h2><div class="donut-box"><div id="donut"></div><ul id="legend" class="legend"></ul></div><p id="noCats" class="empty" hidden>No expenses this month.</p></section>
+    <section class="card"><h2>Last 6 months</h2><div id="trend"></div><div class="key"><span><i class="g"></i>Income</span><span><i class="b"></i>Expenses</span></div></section>
+  </div>
+  <section class="card"><h2>Monthly budgets</h2><div id="budgets"></div><p id="noBudgets" class="empty" hidden>No budgets yet. Set one below.</p>
+    <form id="budgetForm" class="budget-form"><select id="bCat" aria-label="Budget category"></select><input id="bLimit" type="number" min="1" step="any" placeholder="Monthly limit (₹)" required aria-label="Budget limit"><button class="btn ghost">Set budget</button></form></section>
+  <section class="card"><h2>Transactions</h2>
+    <div class="tools"><input id="q" type="search" placeholder="Search note or category" aria-label="Search">
+      <select id="fType" aria-label="Type"><option value="">All types</option><option value="expense">Expenses</option><option value="income">Income</option></select>
+      <select id="fCat" aria-label="Category"><option value="">All categories</option></select></div>
+    <div class="table-wrap cards"><table><thead><tr><th>Date</th><th>Category</th><th>Note</th><th class="r">Amount</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+    <p id="noRows" class="empty" hidden>No transactions found.</p></section>
+</main>
+
+<dialog id="dlg"><form id="form" novalidate>
+  <h2 id="dlgTitle">Add transaction</h2>
+  <div class="seg" role="radiogroup" aria-label="Type"><label><input type="radio" name="type" value="expense" checked><span>Expense</span></label><label><input type="radio" name="type" value="income"><span>Income</span></label></div>
+  <div class="fields">
+    <label>Amount (₹)<input name="amount" type="number" min="0.01" step="0.01" required></label>
+    <label>Date<input name="tx_date" type="date" required></label>
+    <label>Category<select name="category" required></select></label>
+    <label>Note<input name="note" maxlength="200"></label>
+  </div>
+  <p id="formErr" class="err" role="alert"></p>
+  <div class="row"><button type="button" id="cancel" class="btn ghost">Cancel</button><button class="btn primary">Save</button></div>
+</form></dialog>
+<div id="toast" class="toast" role="status"></div>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
